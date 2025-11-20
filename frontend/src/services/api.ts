@@ -2,7 +2,19 @@
  * API Service Layer
  * Axios instance with base configuration
  */
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import type {
+  ChatRequest,
+  ChatResponse,
+  BusSearchParams,
+  BusSearchResponse,
+  BusProvidersListResponse,
+  BusProvider,
+  BookingCreateRequest,
+  Booking,
+  BookingListParams,
+  BookingListResponse,
+} from '@/types';
 
 export const api = axios.create({
   baseURL: '/api/v1',
@@ -36,33 +48,40 @@ api.interceptors.response.use(
   }
 );
 
-// API endpoints
+// ============ Chat API ============
+
 export const chatApi = {
-  sendMessage: (message: string) =>
-    api.post('/chat', { message }),
+  sendMessage: (data: ChatRequest): Promise<AxiosResponse<ChatResponse>> =>
+    api.post<ChatResponse>('/chat', data),
 };
+
+// ============ Bus API ============
 
 export const busApi = {
-  search: (params: { from_district: string; to_district: string; provider?: string }) =>
-    api.get('/buses/search', { params }),
+  search: (params: BusSearchParams): Promise<AxiosResponse<BusSearchResponse>> =>
+    api.get<BusSearchResponse>('/buses/search', { params }),
   
-  getProviders: (district?: string) =>
-    api.get('/buses/providers', { params: district ? { district } : {} }),
+  getProviders: (district?: string): Promise<AxiosResponse<BusProvidersListResponse>> =>
+    api.get<BusProvidersListResponse>('/buses/providers', { 
+      params: district ? { district } : {} 
+    }),
   
-  getProviderDetails: (providerName: string) =>
-    api.get(`/buses/providers/${providerName}`),
+  getProviderDetails: (providerName: string): Promise<AxiosResponse<BusProvider>> =>
+    api.get<BusProvider>(`/buses/providers/${providerName}`),
 };
 
+// ============ Booking API ============
+
 export const bookingApi = {
-  create: (data: any) =>
-    api.post('/bookings', data),
+  create: (data: BookingCreateRequest): Promise<AxiosResponse<Booking>> =>
+    api.post<Booking>('/bookings', data),
   
-  list: (params: { customer_email?: string; customer_phone?: string }) =>
-    api.get('/bookings', { params }),
+  list: (params: BookingListParams): Promise<AxiosResponse<BookingListResponse>> =>
+    api.get<BookingListResponse>('/bookings', { params }),
   
-  get: (id: number) =>
-    api.get(`/bookings/${id}`),
+  get: (id: number): Promise<AxiosResponse<Booking>> =>
+    api.get<Booking>(`/bookings/${id}`),
   
-  cancel: (id: number) =>
-    api.delete(`/bookings/${id}`),
+  cancel: (id: number): Promise<AxiosResponse<Booking>> =>
+    api.delete<Booking>(`/bookings/${id}`),
 };

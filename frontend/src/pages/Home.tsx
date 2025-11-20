@@ -39,7 +39,7 @@ export default function Home() {
         <Grid item xs={12} md={4}>
           <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
-              <SearchIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
+              <SearchIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2}} />
               <Typography variant="h5" component="h2" gutterBottom>
                 Search Buses
               </Typography>

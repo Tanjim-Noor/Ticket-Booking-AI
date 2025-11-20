@@ -1,0 +1,32 @@
+Objective: Create a bus ticket booking application that allows users to search for buses, book tickets, view their bookings, and access bus-specific information.
+
+Available Data: You are provided with a dataset that includes
+
+- Districts and their dropping points
+- Bus providers and their routes with fares
+- Each bus provider has a file containing their privacy policy and contact information
+
+Task Requirements:
+
+- Allow users to book a ticket by providing basic information (name and phone number)
+- Store bookings and allow users to view or cancel them
+- Display bus provider details to users using the files provided
+- Provide a web interface for users to interact with
+
+Application Design:
+
+- The database used must be self-hosted/Dockerized 
+- Using developer prompts or system prompts to store the provided data is strictly prohibited
+- Participants should be judged based on how the application is structured
+- Participants must demonstrate a RAG (Retrieval-Augmented Generation) pipeline in the application
+- Build a complete application with both backend (FastAPI) and frontend
+- Handle all operations needed to search for buses, manage bookings, and retrieve bus details
+- Include a `README.md` with instructions on how to run the application
+
+Example Questions:
+
+- “Are there any buses from Dhaka to Rajshahi under 500 taka?”
+- “Show all bus providers operating from Chittagong to Sylhet.”
+- “What are the contact details of Hanif Bus?”
+
+

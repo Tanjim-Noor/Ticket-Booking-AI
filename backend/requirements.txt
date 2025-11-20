@@ -1,0 +1,22 @@
+# FastAPI and server
+fastapi[standard]
+uvicorn[standard]
+python-multipart
+pydantic-settings
+
+# LangChain and AI
+langchain
+langchain-google-genai
+langchain-text-splitters
+langchain-community
+
+# Database
+sqlalchemy
+alembic
+psycopg2-binary
+
+# Vector Store
+chromadb
+
+# Utilities  
+python-dotenv

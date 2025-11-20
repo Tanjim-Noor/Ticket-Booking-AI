@@ -1,0 +1,28 @@
+# .env file with secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# ChromaDB
+chroma_data/
+
+# Alembic
+alembic/versions/*.py
+!alembic/versions/__init__.py
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Logs
+*.log

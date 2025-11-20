@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.logging import logger
-from app.api.endpoints import chat
+from app.api.endpoints import chat, buses, bookings
 
 # Create FastAPI app
 app = FastAPI(
@@ -33,7 +33,10 @@ async def shutdown_event():
     """Run on application shutdown."""
     logger.info(f"Shutting down {settings.APP_NAME}")
 
+# Register API routers
 app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
+app.include_router(buses.router, prefix="/api/v1", tags=["buses"])
+app.include_router(bookings.router, prefix="/api/v1", tags=["bookings"])
 
 @app.get("/")
 async def root():

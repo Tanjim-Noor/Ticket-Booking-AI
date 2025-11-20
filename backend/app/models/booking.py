@@ -1,5 +1,5 @@
 """Database models for bookings."""
-from sqlalchemy import Column, Integer, String, DateTime, Enum
+from sqlalchemy import Column, Integer, String, DateTime, Enum, Date
 from datetime import datetime
 import enum
 
@@ -19,15 +19,22 @@ class Booking(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     customer_name = Column(String, nullable=False)
+    customer_email = Column(String, nullable=False, index=True)
     customer_phone = Column(String, nullable=False, index=True)
     
     # Route information
     from_district = Column(String, nullable=False)
     to_district = Column(String, nullable=False)
-    bus_provider = Column(String, nullable=False)
+    provider = Column(String, nullable=False)  # Changed from bus_provider to provider
     
     # Booking details
-    status = Column(Enum(BookingStatus), default=BookingStatus.PENDING)
+    travel_date = Column(Date, nullable=False)
+    num_seats = Column(Integer, nullable=False, default=1)
+    dropping_point = Column(String, nullable=True)
+    total_fare = Column(Integer, nullable=False, default=0)
+    status = Column(Enum(BookingStatus), default=BookingStatus.CONFIRMED)
+    
+    # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     

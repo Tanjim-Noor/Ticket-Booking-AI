@@ -46,7 +46,10 @@ export const useBooking = (id: number, enabled = true) => {
 /**
  * Hook to create a new booking
  */
-export const useCreateBooking = () => {
+/**
+ * Hook to create a new booking
+ */
+export const useCreateBooking = (onSuccessCallback?: (data: any) => void) => {
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useUIStore();
 
@@ -59,6 +62,9 @@ export const useCreateBooking = () => {
       // Invalidate bookings list to refetch
       queryClient.invalidateQueries({ queryKey: bookingKeys.all });
       showSuccess(`Booking created successfully! Booking ID: ${data.id}`);
+      if (onSuccessCallback) {
+        onSuccessCallback(data);
+      }
     },
     onError: (error: any) => {
       const errorMessage = error.response?.data?.detail || 'Failed to create booking';
@@ -71,20 +77,23 @@ export const useCreateBooking = () => {
 /**
  * Hook to cancel a booking
  */
-export const useCancelBooking = () => {
+export const useCancelBooking = (onSuccessCallback?: () => void) => {
   const queryClient = useQueryClient();
   const { showSuccess, showError } = useUIStore();
 
   return useMutation({
     mutationFn: async (id: number) => {
-      const response = await bookingApi.cancel(id);
-      return response.data;
+      await bookingApi.cancel(id);
+      return id;
     },
-    onSuccess: (data) => {
+    onSuccess: (id) => {
       // Invalidate bookings list and the specific booking
       queryClient.invalidateQueries({ queryKey: bookingKeys.all });
-      queryClient.invalidateQueries({ queryKey: bookingKeys.detail(data.id) });
-      showSuccess(`Booking #${data.id} cancelled successfully`);
+      queryClient.invalidateQueries({ queryKey: bookingKeys.detail(id) });
+      showSuccess(`Booking #${id} cancelled successfully`);
+      if (onSuccessCallback) {
+        onSuccessCallback();
+      }
     },
     onError: (error: any) => {
       const errorMessage = error.response?.data?.detail || 'Failed to cancel booking';

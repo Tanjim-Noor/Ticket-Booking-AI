@@ -19,7 +19,7 @@ export default function Home() {
       </Box>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
               <ChatIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
@@ -36,7 +36,7 @@ export default function Home() {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
               <SearchIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2}} />
@@ -53,7 +53,7 @@ export default function Home() {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
             <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
               <BookOnlineIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />

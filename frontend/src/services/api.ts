@@ -2,7 +2,7 @@
  * API Service Layer
  * Axios instance with base configuration
  */
-import axios, { AxiosResponse } from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 import type {
   ChatRequest,
   ChatResponse,

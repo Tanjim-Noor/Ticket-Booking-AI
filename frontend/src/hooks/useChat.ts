@@ -1,14 +1,13 @@
 /**
  * Chat Hooks - TanStack Query hooks for chat operations
  */
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { chatApi } from '@/services/api';
 import { useChatStore } from '@/stores/chatStore';
 import { useUIStore } from '@/stores/uiStore';
 import type { ChatRequest, ChatResponse } from '@/types';
 
 export const useChatMutation = () => {
-  const queryClient = useQueryClient();
   const { addMessage, setConversationId, conversationId } = useChatStore();
   const { showError } = useUIStore();
 
@@ -29,11 +28,12 @@ export const useChatMutation = () => {
       return response.data;
     },
     onSuccess: (data: ChatResponse) => {
-      // Add assistant response to store
+      // Add assistant response to store with sources
       addMessage({
         role: 'assistant',
         content: data.response,
-      });
+        sources: data.sources, // Include sources from RAG response
+      } as any); // Type assertion needed as ChatMessage doesn't have sources in base type
       
       // Update conversation ID if new
       if (data.conversation_id) {

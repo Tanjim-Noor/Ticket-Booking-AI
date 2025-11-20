@@ -18,6 +18,11 @@ class Settings(BaseSettings):
     # ChromaDB
     CHROMA_PERSIST_DIR: str = "./chroma_data"
     
+    # LangSmith (Optional - for monitoring and tracing)
+    LANGSMITH_TRACING: str = "false"
+    LANGSMITH_API_KEY: str = ""
+    LANGSMITH_PROJECT: str = "bus-ticket-booking-ai"
+    
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
 

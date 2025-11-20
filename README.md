@@ -100,6 +100,11 @@ frontend/
    The backend API will be available at: `http://localhost:8000`
    API documentation: `http://localhost:8000/docs`
 
+8. (Optional) Configure LangSmith for monitoring:
+   - See [LANGSMITH_SETUP.md](backend/LANGSMITH_SETUP.md) for detailed instructions
+   - Add `LANGSMITH_TRACING=true` and `LANGSMITH_API_KEY` to `.env`
+   - View traces at [smith.langchain.com](https://smith.langchain.com)
+
 ### Frontend Setup
 
 1. Navigate to frontend directory:

@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.logging import logger
+from app.api.endpoints import chat
 
 # Create FastAPI app
 app = FastAPI(
@@ -32,15 +33,11 @@ async def shutdown_event():
     """Run on application shutdown."""
     logger.info(f"Shutting down {settings.APP_NAME}")
 
+app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
 
 @app.get("/")
 async def root():
-    """Root endpoint."""
-    return {
-        "message": "Bus Ticket Booking AI Chatbot API",
-        "status": "running"
-    }
-
+    return {"message": "Welcome to Bus Ticket Booking AI Chatbot API"}
 
 @app.get("/health")
 async def health_check():

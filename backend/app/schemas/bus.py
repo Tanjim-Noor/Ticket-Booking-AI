@@ -12,12 +12,20 @@ class BusSearchRequest(BaseModel):
     provider: Optional[str] = Field(None, description="Filter by bus provider (optional)")
 
 
+class DroppingPoint(BaseModel):
+    """Dropping point information."""
+    name: str
+    price: int
+
+
 class RouteResponse(BaseModel):
     """Response model for a single route."""
     provider: str
     from_district: str
     to_district: str
-    estimated_fare: int
+    min_price: int
+    max_price: int
+    dropping_points: List[DroppingPoint]
     description: str
 
 

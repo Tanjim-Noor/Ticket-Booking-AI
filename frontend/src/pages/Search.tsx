@@ -38,10 +38,10 @@ export default function Search() {
     // Sort
     switch (sortBy) {
       case 'fare-asc':
-        result.sort((a: BusRoute, b: BusRoute) => a.estimated_fare - b.estimated_fare);
+        result.sort((a: BusRoute, b: BusRoute) => a.min_price - b.min_price);
         break;
       case 'fare-desc':
-        result.sort((a: BusRoute, b: BusRoute) => b.estimated_fare - a.estimated_fare);
+        result.sort((a: BusRoute, b: BusRoute) => b.min_price - a.min_price);
         break;
       case 'provider-asc':
         result.sort((a: BusRoute, b: BusRoute) => a.provider.localeCompare(b.provider));

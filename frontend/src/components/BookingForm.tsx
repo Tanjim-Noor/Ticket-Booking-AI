@@ -19,8 +19,7 @@ import { useState, useEffect } from 'react';
 import { useBookingStore } from '@/stores';
 import { useCreateBooking } from '@/hooks';
 import { DISTRICTS } from '@/constants/districts';
-import { DROPPING_POINTS } from '@/constants/droppingPoints';
-import type { Booking, BookingCreateRequest } from '@/types';
+import type { Booking, BookingCreateRequest, BusRoute } from '@/types';
 import PersonIcon from '@mui/icons-material/Person';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -28,10 +27,7 @@ import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 
 interface BookingFormProps {
   preFilledData?: {
-    fromDistrict?: string;
-    toDistrict?: string;
-    provider?: string;
-    fare?: number;
+    route?: BusRoute;
   };
   onSuccess: (booking: Booking) => void;
 }
@@ -48,9 +44,9 @@ export default function BookingForm({ preFilledData, onSuccess }: BookingFormPro
     customer_name: customerInfo.name || '',
     customer_email: customerInfo.email || '',
     customer_phone: customerInfo.phone || '',
-    from_district: preFilledData?.fromDistrict || '',
-    to_district: preFilledData?.toDistrict || '',
-    provider: preFilledData?.provider || '',
+    from_district: preFilledData?.route?.from_district || '',
+    to_district: preFilledData?.route?.to_district || '',
+    provider: preFilledData?.route?.provider || '',
     travel_date: '',
     num_seats: 1,
     dropping_point: ''
@@ -58,29 +54,21 @@ export default function BookingForm({ preFilledData, onSuccess }: BookingFormPro
 
   // Update form when preFilledData changes
   useEffect(() => {
-    if (preFilledData) {
+    if (preFilledData?.route) {
       setFormData(prev => ({
         ...prev,
-        from_district: preFilledData.fromDistrict || prev.from_district,
-        to_district: preFilledData.toDistrict || prev.to_district,
-        provider: preFilledData.provider || prev.provider
+        from_district: preFilledData.route?.from_district || prev.from_district,
+        to_district: preFilledData.route?.to_district || prev.to_district,
+        provider: preFilledData.route?.provider || prev.provider
       }));
     }
   }, [preFilledData]);
 
   // Calculate Fare
-  const baseFare = preFilledData?.fare || 500; // Default fallback
-  const droppingPointPrice = formData.dropping_point && formData.to_district
-    ? DROPPING_POINTS[formData.to_district]?.find(dp => dp.name === formData.dropping_point)?.price || 0
-    : 0;
-  
-  // If dropping point has a price, we might add it to base fare or treat it as separate fee
-  // For simplicity, let's assume the dropping point price REPLACES the base fare if it's higher, 
-  // or adds a small fee. Let's just add a fee logic: 
-  // If dropping point price > 0, add (droppingPointPrice - 500) if positive, or just use baseFare.
-  // Actually, let's stick to the requirement: "Calculate total fare".
-  // Let's assume baseFare is per seat.
-  const totalFare = (baseFare * formData.num_seats) + (droppingPointPrice > 0 ? 50 : 0); // Adding small fee for specific dropping point
+  const route = preFilledData?.route;
+  const selectedDroppingPoint = route?.dropping_points.find(dp => dp.name === formData.dropping_point);
+  const pricePerSeat = selectedDroppingPoint?.price || route?.min_price || 500;
+  const totalFare = pricePerSeat * formData.num_seats;
 
   const handleNext = () => {
     if (activeStep === 0) {
@@ -212,7 +200,7 @@ export default function BookingForm({ preFilledData, onSuccess }: BookingFormPro
                 value={formData.from_district}
                 onChange={(_, newValue) => setFormData({ ...formData, from_district: newValue || '' })}
                 renderInput={(params) => <TextField {...params} label="From" required />}
-                disabled={!!preFilledData?.fromDistrict}
+                disabled={!!preFilledData?.route?.from_district}
               />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
@@ -227,7 +215,7 @@ export default function BookingForm({ preFilledData, onSuccess }: BookingFormPro
                   });
                 }}
                 renderInput={(params) => <TextField {...params} label="To" required />}
-                disabled={!!preFilledData?.toDistrict}
+                disabled={!!preFilledData?.route?.to_district}
               />
             </Grid>
             <Grid size={{ xs: 12 }}>
@@ -237,7 +225,7 @@ export default function BookingForm({ preFilledData, onSuccess }: BookingFormPro
                 value={formData.provider}
                 onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
                 required
-                disabled={!!preFilledData?.provider}
+                disabled={!!preFilledData?.route?.provider}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -278,18 +266,16 @@ export default function BookingForm({ preFilledData, onSuccess }: BookingFormPro
               <TextField
                 select
                 fullWidth
-                label="Dropping Point (Optional)"
+                label="Dropping Point"
                 value={formData.dropping_point}
                 onChange={(e) => setFormData({ ...formData, dropping_point: e.target.value })}
-                disabled={!formData.to_district}
-                helperText={!formData.to_district ? "Select destination first" : "Select a dropping point near your destination"}
+                disabled={!route?.dropping_points || route.dropping_points.length === 0}
+                helperText={!route?.dropping_points ? "No dropping points available" : "Select your preferred dropping point"}
+                required
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {formData.to_district && DROPPING_POINTS[formData.to_district]?.map((dp) => (
+                {route?.dropping_points.map((dp) => (
                   <MenuItem key={dp.name} value={dp.name}>
-                    {dp.name} (+৳50 fee)
+                    {dp.name} (৳{dp.price})
                   </MenuItem>
                 ))}
               </TextField>

@@ -15,10 +15,7 @@ export default function RouteCard({ route }: RouteCardProps) {
     // Navigate to bookings page with pre-filled route data
     navigate('/bookings', {
       state: {
-        fromDistrict: route.from_district,
-        toDistrict: route.to_district,
-        provider: route.provider,
-        fare: route.estimated_fare,
+        route: route,
       },
     });
   };
@@ -55,10 +52,10 @@ export default function RouteCard({ route }: RouteCardProps) {
         {/* Fare */}
         <Box>
           <Typography variant="h4" color="primary.main" fontWeight="bold">
-            ৳{route.estimated_fare}
+            ৳{route.min_price} - ৳{route.max_price}
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            Estimated Fare
+            Price Range
           </Typography>
         </Box>
 

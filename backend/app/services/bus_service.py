@@ -52,32 +52,74 @@ class BusService:
         if to_district not in self.districts:
             raise ValueError(f"Unknown destination district: {to_district}")
         
-        # Build search query
-        query = f"bus routes from {from_district} to {to_district}"
-        if provider:
-            query += f" with {provider}"
+        # Build search query for vector store
+        query = f"routes from {from_district} to {to_district}"
         
-        # Use RAG to find relevant routes
+        # Query the vector store directly to get route documents
         logger.info(f"Searching routes: {query}")
-        result = await self.rag_service.get_answer(query)
+        vector_store = self.rag_service.vector_store
         
-        # Parse routes from ChromaDB (simplified - in production, query ChromaDB directly)
+        # Retrieve relevant documents
+        docs = vector_store.similarity_search(query, k=10)
+        
+        # Parse routes from documents
         routes = []
-        for provider_name, provider_data in self.providers.items():
+        seen_providers = set()
+        
+        for doc in docs:
+            metadata = doc.metadata
+            
+            # Filter by route type and matching origin/destination
+            if (metadata.get("type") != "route" or 
+                metadata.get("from") != from_district or
+                metadata.get("to") != to_district):
+                continue
+            
+            provider_name = metadata.get("provider")
+            
+            # Apply provider filter if specified
             if provider and provider.lower() != provider_name.lower():
                 continue
             
-            coverage = provider_data["coverage_districts"]
-            if from_district in coverage and to_district in coverage:
-                # Estimate fare based on distance (simplified)
-                base_fare = 500
-                routes.append(RouteResponse(
-                    provider=provider_name,
-                    from_district=from_district,
-                    to_district=to_district,
-                    estimated_fare=base_fare + (len(from_district) + len(to_district)) * 10,
-                    description=f"{provider_name} operates on this route"
-                ))
+            # Avoid duplicate providers
+            if provider_name in seen_providers:
+                continue
+            seen_providers.add(provider_name)
+            
+            # Parse dropping points from document content
+            content = doc.page_content
+            dropping_points = []
+            
+            # Extract dropping points from content
+            # Format: - <name>: ৳<price>
+            import re
+            pattern = r'-\s+(.+?):\s+৳(\d+)'
+            matches = re.findall(pattern, content)
+            
+            for name, price in matches:
+                dropping_points.append({
+                    "name": name.strip(),
+                    "price": int(price)
+                })
+            
+            # Get min/max prices from metadata or calculate from dropping points
+            min_price = metadata.get("min_price", 0)
+            max_price = metadata.get("max_price", 0)
+            
+            if not min_price and dropping_points:
+                prices = [dp["price"] for dp in dropping_points]
+                min_price = min(prices)
+                max_price = max(prices)
+            
+            routes.append(RouteResponse(
+                provider=provider_name,
+                from_district=from_district,
+                to_district=to_district,
+                min_price=min_price,
+                max_price=max_price,
+                dropping_points=dropping_points,
+                description=f"{provider_name} operates on this route"
+            ))
         
         return routes
     

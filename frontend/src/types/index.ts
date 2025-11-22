@@ -31,11 +31,18 @@ export interface BusSearchParams {
   provider?: string;
 }
 
+export interface DroppingPoint {
+  name: string;
+  price: number;
+}
+
 export interface BusRoute {
   provider: string;
   from_district: string;
   to_district: string;
-  estimated_fare: number;
+  min_price: number;
+  max_price: number;
+  dropping_points: DroppingPoint[];
   description: string;
 }
 

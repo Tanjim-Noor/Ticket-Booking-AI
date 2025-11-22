@@ -1,174 +1,141 @@
-# Bus Ticket Booking AI Chatbot
+# AI RAG Chatbot for Bus Ticket Booking
 
-An AI-powered chatbot application using RAG (Retrieval-Augmented Generation) for bus ticket booking information and assistance.
+An intelligent bus ticket booking application that leverages Retrieval-Augmented Generation (RAG) to provide a conversational interface for searching buses, viewing routes, and managing bookings. Built with a modern tech stack featuring FastAPI, LangChain, and React.
 
-## Tech Stack
+## 🚀 Features
+
+- **AI Chat Assistant**: Conversational interface powered by Google Gemini and RAG to answer queries about bus schedules, routes, and policies.
+- **Smart Search**: Search for buses between districts with real-time availability.
+- **Booking Management**: Complete booking flow including seat selection, passenger details, and booking confirmation.
+- **My Bookings**: View and manage your past and upcoming bookings.
+- **Admin Dashboard**: (Planned) Interface for bus operators to manage schedules and fleet.
+
+## 🛠️ Tech Stack
 
 ### Backend
-- **FastAPI** - Modern web framework for building APIs
-- **LangChain** - RAG orchestration framework
-- **Google Gemini API** - Large Language Model
-- **SQLAlchemy** - SQL toolkit and ORM
-- **Alembic** - Database migration tool
-- **ChromaDB** - Vector database for embeddings
-- **PostgreSQL** - Relational database
+- **Framework**: FastAPI (Python)
+- **LLM & RAG**: LangChain, Google Gemini API
+- **Vector DB**: ChromaDB (for document embeddings)
+- **Database**: PostgreSQL (via SQLAlchemy & Alembic)
+- **Containerization**: Docker & Docker Compose
 
 ### Frontend
-- **Vite** - Build tool
-- **React** - UI framework
-- **TypeScript** - Type-safe JavaScript
-- **Material UI** - Component library
-- **TanStack Query** - Data fetching and caching
-- **Zustand** - State management
+- **Framework**: React (Vite)
+- **Language**: TypeScript
+- **UI Library**: Material UI (MUI)
+- **State Management**: Zustand, TanStack Query
 
-## Project Structure
+## 📋 Prerequisites
 
-```
-backend/
-├── app/
-│   ├── api/          # API endpoints
-│   ├── core/         # Core configuration
-│   ├── models/       # Database models
-│   ├── schemas/      # Pydantic schemas
-│   ├── services/     # Business logic
-│   └── utils/        # Utility functions
-├── docker/           # Docker configuration
-├── .env              # Environment variables
-└── requirements.txt  # Python dependencies
+Ensure you have the following installed:
+- **Python** 3.10+
+- **Node.js** 18+
+- **Docker** & **Docker Compose**
+- **Git**
 
-frontend/
-├── src/
-│   ├── components/   # React components
-│   ├── services/     # API services
-│   ├── hooks/        # Custom hooks
-│   ├── stores/       # State management
-│   ├── types/        # TypeScript types
-│   └── pages/        # Page components
-└── package.json      # Node dependencies
-```
+## ⚙️ Setup Instructions
 
-## Setup Instructions
+### 1. Clone the Repository
 
-### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- Docker & Docker Compose
-
-### Backend Setup
-
-1. Navigate to backend directory:
-   ```bash
-   cd backend
-   ```
-
-2. Create and activate virtual environment:
-   ```bash
-   python -m venv venv
-   
-   # Windows
-   .\venv\Scripts\activate
-   
-   # Linux/Mac
-   source venv/bin/activate
-   ```
-
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Set up environment variables:
-   - Copy `.env.example` to `.env` (if exists)
-   - Update `DATABASE_URL` and `GOOGLE_API_KEY`
-
-5. Start database (PostgreSQL) using Docker:
-   ```bash
-   cd docker
-   docker-compose up -d
-   ```
-
-6. Run database migrations:
-   ```bash
-   alembic upgrade head
-   ```
-
-7. Start the FastAPI server:
-   ```bash
-   uvicorn app.main:app --reload
-   ```
-
-   The backend API will be available at: `http://localhost:8000`
-   API documentation: `http://localhost:8000/docs`
-
-8. (Optional) Configure LangSmith for monitoring:
-   - See [LANGSMITH_SETUP.md](backend/LANGSMITH_SETUP.md) for detailed instructions
-   - Add `LANGSMITH_TRACING=true` and `LANGSMITH_API_KEY` to `.env`
-   - View traces at [smith.langchain.com](https://smith.langchain.com)
-
-### Frontend Setup
-
-1. Navigate to frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start development server:
-   ```bash
-   npm run dev
-   ```
-
-   The frontend will be available at: `http://localhost:5173`
-
-## API Endpoints
-
-- `GET /` - Root endpoint
-- `GET /health` - Health check
-- `POST /api/chat` - Chat with AI (coming soon)
-- `GET /api/buses/search` - Search buses (coming soon)
-- `POST /api/bookings` - Create booking (coming soon)
-
-## Development
-
-### Backend Development
 ```bash
-cd backend
-.\venv\Scripts\activate  # Windows
-uvicorn app.main:app --reload
+git clone https://github.com/Tanjim-Noor/Ticket-Booking-AI.git
+cd Ticket-Booking-AI
 ```
 
-### Frontend Development
-```bash
-cd frontend
-npm run dev
-```
+### 2. Backend Setup
 
-## Testing
+1.  **Navigate to the backend directory:**
+    ```bash
+    cd backend
+    ```
 
-### Test Backend
-```bash
-# Test API endpoints
-curl http://localhost:8000
-curl http://localhost:8000/health
-```
+2.  **Create and activate a virtual environment:**
+    ```bash
+    python -m venv venv
+    # Windows
+    .\venv\Scripts\activate
+    # Linux/Mac
+    source venv/bin/activate
+    ```
 
-### Test Frontend
-Visit `http://localhost:5173` in your browser
+3.  **Install Python dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## Features (Planned)
+4.  **Configure Environment Variables:**
+    Create a `.env` file in the `backend` directory and add the following:
+    ```env
+    DATABASE_URL=postgresql://user:password@localhost:5432/ticket_booking_db
+    GOOGLE_API_KEY=your_google_gemini_api_key
+    # Optional: LangSmith for tracing
+    LANGSMITH_TRACING=true
+    LANGSMITH_API_KEY=your_langsmith_api_key
+    ```
 
-- ✅ Backend foundation with FastAPI
-- ⏳ RAG knowledge base with ChromaDB
-- ⏳ AI chatbot with Gemini integration
-- ⏳ Bus search and filtering
-- ⏳ Booking management
-- ⏳ Modern UI with Material-UI
-- ⏳ Real-time chat interface
+5.  **Start Infrastructure (PostgreSQL & ChromaDB):**
+    ```bash
+    cd docker
+    docker-compose up -d
+    cd ..
+    ```
 
-## License
+6.  **Run Database Migrations:**
+    ```bash
+    alembic upgrade head
+    ```
 
-MIT
+7.  **Start the Backend Server:**
+    ```bash
+    uvicorn app.main:app --reload
+    ```
+    The API will be available at `http://localhost:8000`.
+    API Documentation (Swagger UI): `http://localhost:8000/docs`.
+
+### 3. Frontend Setup
+
+1.  **Navigate to the frontend directory:**
+    ```bash
+    cd frontend
+    ```
+
+2.  **Install Node dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Start the Development Server:**
+    ```bash
+    npm run dev
+    ```
+    The application will be running at `http://localhost:5173`.
+
+## 🔑 Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Description | Required |
+| :--- | :--- | :--- |
+| `DATABASE_URL` | Connection string for PostgreSQL | Yes |
+| `GOOGLE_API_KEY` | API Key for Google Gemini | Yes |
+| `LANGSMITH_TRACING` | Enable LangSmith tracing (true/false) | No |
+| `LANGSMITH_API_KEY` | API Key for LangSmith | No |
+
+### Frontend (`frontend/.env`)
+
+| Variable | Description | Default |
+| :--- | :--- | :--- |
+| `VITE_API_URL` | Backend API URL | `http://localhost:8000` |
+
+## 📚 Documentation
+
+- **API Docs**: Visit `/docs` on the backend server (e.g., `http://localhost:8000/docs`) to explore the REST API endpoints.
+- **Database Schema**: The database schema is managed via Alembic migrations in `backend/alembic`.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.

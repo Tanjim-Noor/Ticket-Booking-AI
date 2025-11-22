@@ -67,7 +67,7 @@ export default function Search() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Header */}
       <Typography variant="h4" component="h1" gutterBottom sx={{ mb: 3 }}>
         Search Bus Routes
@@ -88,7 +88,7 @@ export default function Search() {
 
           {/* Loading State */}
           {isLoading && (
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', xl: 'repeat(4, 1fr)' }, gap: 3 }}>
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <Skeleton key={i} variant="rectangular" height={300} sx={{ borderRadius: 1 }} />
               ))}
@@ -110,7 +110,7 @@ export default function Search() {
               />
 
               {/* Route Cards */}
-              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 3 }}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', xl: 'repeat(4, 1fr)' }, gap: 3 }}>
                 {filteredAndSortedRoutes.map((route: BusRoute, index: number) => (
                   <RouteCard key={index} route={route} />
                 ))}

@@ -105,7 +105,7 @@ export default function BookingsList() {
       {isLoading && (
         <Grid container spacing={3}>
           {[1, 2, 3].map((i) => (
-            <Grid size={{ xs: 12, md: 6, lg: 6 }} key={i}>
+            <Grid size={{ xs: 12, md: 6, lg: 6, xl: 4 }} key={i}>
               <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 2 }} />
             </Grid>
           ))}
@@ -129,7 +129,7 @@ export default function BookingsList() {
       {!isLoading && !isError && data && data.bookings.length > 0 && (
         <Grid container spacing={3}>
           {data.bookings.map((booking) => (
-            <Grid size={{ xs: 12, md: 6, lg: 6 }} key={booking.id}>
+            <Grid size={{ xs: 12, md: 6, lg: 6, xl: 4 }} key={booking.id}>
               <BookingCard
                 booking={booking}
                 onCancel={(id) => cancelBooking(id)}

@@ -81,7 +81,7 @@ export default function Bookings() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="xl" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom align="center" sx={{ mb: 4 }}>
         Bus Ticket Booking
       </Typography>

@@ -8,7 +8,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
+    <Container maxWidth="xl" sx={{ py: 8 }}>
       <Box textAlign="center" mb={6}>
         <Typography variant="h2" component="h1" gutterBottom>
           Bus Ticket Booking AI

@@ -85,7 +85,20 @@ cd Ticket-Booking-AI
     alembic upgrade head
     ```
 
-7.  **Start the Backend Server:**
+7.  **Populate Knowledge Base (RAG Data Ingestion):**
+    Run the ingestion script to load bus routes and provider data into ChromaDB.
+    
+    **Windows (PowerShell):**
+    ```powershell
+    $env:PYTHONPATH='.'; python app/services/data_ingestion.py
+    ```
+    
+    **Linux/Mac:**
+    ```bash
+    PYTHONPATH=. python app/services/data_ingestion.py
+    ```
+
+8.  **Start the Backend Server:**
     ```bash
     uvicorn app.main:app --reload
     ```

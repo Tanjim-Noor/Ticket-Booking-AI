@@ -70,7 +70,7 @@ class RAGService:
         @tool(response_format="content_and_artifact")
         def retrieve_bus_info(query: str):
             """Retrieve information about bus routes, providers, and districts to help answer user questions."""
-            retrieved_docs = vector_store.similarity_search(query, k=4)
+            retrieved_docs = vector_store.similarity_search(query, k=8)
             serialized = "\n\n".join(
                 f"Source: {doc.metadata}\nContent: {doc.page_content}"
                 for doc in retrieved_docs

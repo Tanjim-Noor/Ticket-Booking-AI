@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     
     # LangSmith (Optional - for monitoring and tracing)
     LANGSMITH_TRACING: str = "false"
+    LANGSMITH_ENDPOINT: str = "https://api.smith.langchain.com"
     LANGSMITH_API_KEY: str = ""
     LANGSMITH_PROJECT: str = "bus-ticket-booking-ai"
     

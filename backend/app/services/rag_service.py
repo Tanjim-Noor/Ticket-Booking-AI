@@ -35,11 +35,23 @@ class RAGService:
 
     def _initialize_vector_store(self) -> Chroma:
         """Initialize ChromaDB vector store."""
-        return Chroma(
+        store = Chroma(
             collection_name="bus_routes_knowledge",
             embedding_function=self.embeddings,
             persist_directory=settings.CHROMA_PERSIST_DIR
         )
+        # Debug: Check what's in the store
+        try:
+            sample = store.get(limit=1)
+            if sample and sample['ids']:
+                logger.info(f"DEBUG: Vector Store loaded. Sample Doc ID: {sample['ids'][0]}")
+                logger.info(f"DEBUG: Sample Metadata: {sample['metadatas'][0]}")
+            else:
+                logger.warning("DEBUG: Vector Store is empty!")
+        except Exception as e:
+            logger.error(f"DEBUG: Error checking vector store: {e}")
+            
+        return store
 
     def _initialize_llm(self) -> ChatGoogleGenerativeAI:
         """Initialize Gemini Chat Model."""

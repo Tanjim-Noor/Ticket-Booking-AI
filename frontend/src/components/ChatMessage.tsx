@@ -1,6 +1,8 @@
 import { Box, Paper, Typography, Chip, Avatar } from '@mui/material';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import PersonIcon from '@mui/icons-material/Person';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import type { ChatMessage as ChatMessageType } from '@/types';
 
 interface ChatMessageProps {
@@ -48,11 +50,17 @@ export default function ChatMessage({ message, sources }: ChatMessageProps) {
               borderRadius: 2,
               borderTopRightRadius: isUser ? 0 : 2,
               borderTopLeftRadius: isUser ? 2 : 0,
+              '& p': { m: 0, mb: 1, '&:last-child': { mb: 0 } },
+              '& ul, & ol': { m: 0, mb: 1, pl: 2 },
+              '& li': { mb: 0.5 },
+              '& strong': { fontWeight: 600 },
+              '& table': { width: '100%', borderCollapse: 'collapse', mb: 1 },
+              '& th, & td': { border: '1px solid', borderColor: 'divider', p: 0.5 },
             }}
           >
-            <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {message.content}
-            </Typography>
+            </ReactMarkdown>
           </Paper>
 
           {/* Sources */}

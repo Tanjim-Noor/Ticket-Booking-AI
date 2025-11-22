@@ -1,4 +1,5 @@
 """Core configuration settings using Pydantic Settings."""
+from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -16,7 +17,7 @@ class Settings(BaseSettings):
     GOOGLE_API_KEY: str
     
     # ChromaDB
-    CHROMA_PERSIST_DIR: str = "./chroma_data"
+    CHROMA_PERSIST_DIR: str = str(Path(__file__).parent.parent.parent / "chroma_data")
     
     # LangSmith (Optional - for monitoring and tracing)
     LANGSMITH_TRACING: str = "false"

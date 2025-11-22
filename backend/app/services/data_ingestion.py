@@ -5,6 +5,10 @@ from typing import List, Dict
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 from app.core.config import settings
 from app.core.logging import logger
@@ -145,17 +149,27 @@ Number of districts covered: {len(coverage)}
             for from_district in coverage:
                 for to_district in coverage:
                     if from_district != to_district:
-                        # Get dropping point info
-                        from_info = district_dict.get(from_district, {}).get("dropping_points", [])
+                        # Get dropping point info for the DESTINATION district
                         to_info = district_dict.get(to_district, {}).get("dropping_points", [])
                         
-                        min_price_from = min([dp["price"] for dp in from_info]) if from_info else 0
-                        min_price_to = min([dp["price"] for dp in to_info]) if to_info else 0
-                        estimated_fare = min_price_from + min_price_to
+                        if not to_info:
+                            continue
+
+                        # Format dropping points and prices
+                        dropping_points_str = "\n".join([
+                            f"- {dp['name']}: ৳{dp['price']}" 
+                            for dp in to_info
+                        ])
+                        
+                        prices = [dp["price"] for dp in to_info]
+                        min_price = min(prices) if prices else 0
+                        max_price = max(prices) if prices else 0
                         
                         doc_text = f"""Route: {from_district} to {to_district}
 Bus Provider: {provider_name}
-Estimated Fare: ৳{estimated_fare}
+Ticket Prices (to {to_district}):
+{dropping_points_str}
+
 From District: {from_district}
 To District: {to_district}
 """ 
@@ -168,7 +182,8 @@ To District: {to_district}
                                 "provider": provider_name,
                                 "from": from_district,
                                 "to": to_district,
-                                "estimated_fare": estimated_fare
+                                "min_price": min_price,
+                                "max_price": max_price
                             }
                         })
                         doc_id += 1
@@ -201,6 +216,16 @@ To District: {to_district}
                     metadata=doc["metadata"]
                 )
             )
+            
+        # Clear existing documents to ensure a fresh start
+        try:
+            existing_ids = self.vector_store.get()["ids"]
+            if existing_ids:
+                logger.info(f"Deleting {len(existing_ids)} existing documents...")
+                self.vector_store.delete(ids=existing_ids)
+                logger.info("Existing documents deleted.")
+        except Exception as e:
+            logger.warning(f"Could not clear existing documents: {e}")
         
         # Add to ChromaDB using LangChain's Chroma
         logger.info(f"Adding {len(langchain_docs)} documents to ChromaDB...")
@@ -231,7 +256,7 @@ def run_data_ingestion():
     
     # Test with a sample query
     print("\n🔍 Testing with sample query: 'buses from Dhaka to Rajshahi'")
-    results = service.query_knowledge_base("buses from Dhaka to Rajshahi under 500 taka")
+    results = service.query_knowledge_base("buses from Dhaka to Rajshahi")
     print(f"Found {len(results)} relevant documents:")
     for i, doc in enumerate(results[:3], 1):
         print(f"\n{i}. {doc.page_content[:150]}...")

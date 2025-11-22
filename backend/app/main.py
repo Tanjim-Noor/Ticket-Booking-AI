@@ -30,6 +30,7 @@ app.add_middleware(
 async def startup_event():
     """Run on application startup."""
     logger.info(f"Starting {settings.APP_NAME}")
+    logger.info(f"DEBUG: CHROMA_PERSIST_DIR is set to: {settings.CHROMA_PERSIST_DIR}")
 
 
 @app.on_event("shutdown")
